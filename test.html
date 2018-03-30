@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>321 to 123</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div>
+		<div id='messageboard' >123</div>
+		<div id=board>
+			<form>
+				<input type="text">
+				<input type="button" onclick="submitmessage()">
+			</form>
+			<p id="status"></p>
+		</div>
+	</div>
+
+	<style>
+		* {padding: 0;}
+		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:gray;
+		border-radius: 5px; }
+
+		#messageboard { border:1px solid ;max-width:483px ; min-height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; }
+	
+		#board form { border:1px solid ; max-width:483px ; min-height: 58px; margin:3px 15px; }
+		#board form input:first-child { width: 80%; height: 58px; font-size: 1.5em; }
+		#board form input:last-child { width: 17%; height: 58px; border-radius: 10px; }
+	</style>
+
+	<script >
+		//initial..
+		var messageboard = document.getElementById("messageboard");
+		var createNewP = function( evt){
+			var p = document.createElement('p');
+			p.style.wordWrap = 'break-word';
+			p.style.maxWidth = '80%';
+			p.style.backgroundColor = 'gray';
+			p.innerText = ''+ evt.data;
+			messageboard.appendChild(p);
+		};
+
+		//start..
+		var username;
+		while( username == undefined || ''){
+			username = window.prompt('取个名字');
+		};
+
+		//connecting..
+		var ws = new WebSocket("ws://localhost:8080/echo");
+		ws.onopen = function(){
+			ws.send(username);
+		};
+		ws.onmessage = function(evt){
+			createNewP( evt );
+		};
+		ws.onclose = function(evt){
+			console.log('与服务器断开了连接..')
+		};
+
+		//on submit sendmessage
+		function submitmessage (){
+			var message = document.getElementsByTagName('input')[0].value;
+			document.getElementsByTagName('input')[0].value="";
+			ws.send(message)
+		};
+
+	</script>
+</body>
+</html>
