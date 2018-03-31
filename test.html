@@ -4,13 +4,15 @@
 	<title>321 to 123</title>
 	<meta charset="utf-8">
 </head>
-<body>
+<body style="background-color:#C0C0C0; ">
 	<div>
 		<div id='messageboard' >123</div>
 		<div id=board>
+			<div id='toolbar'> <input type="file"></div>
 			<form>
 				<input type="text">
 				<input type="button" onclick="submitmessage()" value="Send">
+
 			</form>
 			<p id="statusbar"></p>
 		</div>
@@ -21,8 +23,10 @@
 		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:gray;
 		border-radius: 5px; }
 
-		#messageboard { border:1px solid ;max-width:483px ; min-height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; }
-	
+		#messageboard { border:1px solid #C0C0C0; max-width:483px ; min-height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; }
+		
+		#toolbar { max-width:483px ;  margin:0 15px; background-color: gray ; }
+
 		#board form { max-width:483px ; height: 60px; margin:3px 15px; }
 		#board form input:first-child { width: 80%; height: 56px; font-size: 1.5em; vertical-align: top; } /* "vertical-align: top" */
 		#board form input:last-child { width: 81px; height: 60px; border-radius: 8px; }
@@ -46,7 +50,7 @@
 
 		//start..
 		var username;
-		while( username == undefined || ''){
+		while( username == undefined ||''){
 			username = window.prompt('取个名字');
 		};
 
@@ -74,15 +78,20 @@
 		function submitmessage (){
 			statusbar.innerHTML ='<span>正在发送消息..</span>';
 
-			var message = document.getElementsByTagName('input')[0].value;
-			document.getElementsByTagName('input')[0].value="";
-			ws.send( username+': '+ message )
+			var message = document.getElementsByTagName('input')[1].value;
+			document.getElementsByTagName('input')[1].value="";
+			ws.send( username+': '+ message );
+
+		//	var file =document.getElementsByTagName('input')[0].value;
+		//	if( file != null || ''){
+		//		ws.send( file);
+		//	}
 		};
 
 		//statubar clear read message 
 		document.onkeydown = function(event){ if(event.keycode==13){ setTimeout(submitmessage(),0);
 		event.preventDefault?e.preventDefault():(event.returnValue = false ) } };
-		document.getElementsByTagName('input')[0].onfocus = function(){ statusbar.innerHTML ='' }
+		document.getElementsByTagName('input')[1].onfocus = function(){ statusbar.innerHTML ='' }
 
 	</script>
 </body>
