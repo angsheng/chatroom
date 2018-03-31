@@ -32,6 +32,7 @@
 
 	<script >
 		//initial..
+
 		var messageboard = document.getElementById("messageboard");
 		var statusbar = document.getElementById('statusbar');
 	//	var messagenumber = 0 ;
@@ -55,7 +56,7 @@
 		var ws = new WebSocket("ws://localhost:8080/echo");
 		ws.onopen = function(){
 			statusbar.innerHTML ='<span style="color:blue;">连接服务器成功 !</span>'
-			ws.send(username);
+			ws.send( username +'上线了' );
 
 		};
 		ws.onmessage = function(evt){
@@ -75,10 +76,12 @@
 
 			var message = document.getElementsByTagName('input')[0].value;
 			document.getElementsByTagName('input')[0].value="";
-			ws.send(message)
+			ws.send( username+': '+ message )
 		};
 
 		//statubar clear read message 
+		document.onkeydown = function(event){ if(event.keycode==13){ setTimeout(submitmessage(),0);
+		event.preventDefault?e.preventDefault():(event.returnValue = false ) } };
 		document.getElementsByTagName('input')[0].onfocus = function(){ statusbar.innerHTML ='' }
 
 	</script>
