@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>321 to 123</title>
+	<title>test</title>
 	<meta charset="utf-8">
 </head>
 <body style="background-color:#C0C0C0; ">
@@ -39,7 +39,6 @@
 
 		var messageboard = document.getElementById("messageboard");
 		var statusbar = document.getElementById('statusbar');
-	//	var messagenumber = 0 ;
 		var createNewP = function( evt){
 			var p = document.createElement('p');
 			p.style.wordWrap = 'break-word';
@@ -50,8 +49,8 @@
 
 		//start..
 		var username;
-		while( username == undefined ||''){
-			username = window.prompt('取个名字');
+		while( username == undefined || "" || null ){
+			username = window.prompt('nickname?');
 		};
 
 		//connecting..
@@ -82,10 +81,7 @@
 			document.getElementsByTagName('input')[1].value="";
 			ws.send( username+': '+ message );
 
-		//	var file =document.getElementsByTagName('input')[0].value;
-		//	if( file != null || ''){
-		//		ws.send( file);
-		//	}
+		
 		};
 
 		//statubar clear read message 
