@@ -18,5 +18,7 @@ var server = ws.createServer(
 
 function broadcast(conn , nm){
 	server.connections.forEach( function(conn){conn.sendText( nm )} )  
-}
+};
+
+console.log('server is running on 8080')
 
