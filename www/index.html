@@ -4,32 +4,32 @@
 	<title>test</title>
 	<meta charset="utf-8">
 </head>
-<body style="background-color:#C0C0C0; ">
+<body style="background-color:pink; ">
 	<div>
 		<div id='messageboard' ></div>
 		<div id=board>
 			<div id='toolbar'> <input type="file"></div>
-			<form>
+			<div id='p'>
 				<input type="text">
 				<input type="button" onclick="submitmessage()" value="Send">
 
-			</form>
+			</div>
 			<p id="statusbar"></p>
 		</div>
 	</div>
 
 	<style>
 		* {padding: 0;}
-		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:gray;
+		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:#008080;
 		border-radius: 5px; }
 
 		#messageboard { border:1px solid #C0C0C0; max-width:483px ; min-height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; }
 		
 		#toolbar { max-width:483px ;  margin:0 15px; background-color: gray ; }
 
-		#board form { max-width:483px ; height: 60px; margin:3px 15px; }
-		#board form input:first-child { width: 80%; height: 56px; font-size: 1.5em; vertical-align: top; } /* "vertical-align: top" */
-		#board form input:last-child { width: 81px; height: 60px; border-radius: 8px; }
+		#p{ max-width:483px ; height: 60px; margin:3px 15px; }
+		#p input:first-child { width: 80%; height: 56px; font-size: 1.5em; vertical-align: top; } /* "vertical-align: top" */
+		#p input:last-child { width: 81px; height: 60px; border-radius: 8px; }
 
 		#statusbar { font-size: 0.5em; height: 0.6em; margin: 0; margin-left: 15px; }
 	</style>
@@ -56,7 +56,7 @@
 		//connecting..
 		statusbar.innerHTML ='<span">正在连接服务器..</span>'
 
-		var ws = new WebSocket("ws://localhost:8080/echo");
+		var ws = new WebSocket( location.origin.replace(/^http/,'ws') );
 		ws.onopen = function(){
 			statusbar.innerHTML ='<span style="color:blue;">连接服务器成功 !</span>'
 			ws.send( username +'上线了' );
@@ -85,8 +85,11 @@
 		};
 
 		//statubar clear read message 
-		document.onkeydown = function(event){ if(event.keycode==13){ setTimeout(submitmessage(),0);
-		event.preventDefault?e.preventDefault():(event.returnValue = false ) } };
+	/*if(event.keycode==13){ submitmessage();
+		alert('13')
+		event.preventDefault?e.preventDefault():(event.returnValue = false ) 
+		}
+	*/
 		document.getElementsByTagName('input')[1].onfocus = function(){ statusbar.innerHTML ='' }
 
 	</script>

@@ -1,24 +1,29 @@
-var ws=require('nodejs-websocket')
+var express= require('express');
+var SocketServer= require('ws');
+var PORT= process.env.PORT||8000
 
-var server = ws.createServer(
-	function(conn){
-		console.log('new connection');
+var server= express().use(express.static('www')
+).listen(PORT,function(){console.log('listening..')} );
 
-		conn.on('text',function(str){ 
+var ws= new SocketServer.Server({server});
 
-			broadcast( conn,str )
-		});
+ws.on('connection',function(w){
+	console.log('connection...')
 
-		conn.on('close',function(){ console.log('closed this connection ') });
+	w.on('open',function(){
+	console.log('open...');
+	});
 
-		conn.on('error',function(){ console.log('Error'); conn.close() })
-	}
-).listen(8080)
+	w.on('message',function(data){
+	console.log('message...'+data);
+	ws.clients.forEach(function(client){
+		client.send(data)
+	})
+	});
 
+	w.on('close',function(){
+	console.log('close...')
+	});
 
-function broadcast(conn , nm){
-	server.connections.forEach( function(conn){conn.sendText( nm )} )  
-};
-
-console.log('server is running on 8080')
+});
 
