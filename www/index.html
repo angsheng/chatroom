@@ -6,11 +6,12 @@
 </head>
 <body style="background-color:pink; ">
 	<div>
+		<p id="online"></p>
 		<div id='messageboard' ></div>
 		<div id=board>
-			<div id='toolbar'> <input type="file"></div>
+			<div id='toolbar'> <input type="file" name='img' id="img"><button onclick="clearImg()">Clear</button></div>
 			<div id='p'>
-				<input type="text">
+				<textarea></textarea>
 				<input type="button" onclick="submitmessage()" value="Send">
 
 			</div>
@@ -23,15 +24,19 @@
 		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:#008080;
 		border-radius: 5px; }
 
-		#messageboard { border:1px solid #C0C0C0; max-width:483px ; min-height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; }
+		#messageboard { border:1px solid #C0C0C0; max-width:483px ; height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; 
+		}
 		
 		#toolbar { max-width:483px ;  margin:0 15px; background-color: gray ; }
 
 		#p{ max-width:483px ; height: 60px; margin:3px 15px; }
-		#p input:first-child { width: 80%; height: 56px; font-size: 1.5em; vertical-align: top; } /* "vertical-align: top" */
+		#p textarea { width: 80%; height: 56px; font-size: 1.5em; vertical-align: top; 
+			resize: none; } /* "vertical-align: top" */
 		#p input:last-child { width: 81px; height: 60px; border-radius: 8px; }
 
 		#statusbar { font-size: 0.5em; height: 0.6em; margin: 0; margin-left: 15px; }
+
+		#online { color: white; margin:0; margin-left: 1rem;}
 	</style>
 
 	<script >
@@ -39,31 +44,75 @@
 
 		var messageboard = document.getElementById("messageboard");
 		var statusbar = document.getElementById('statusbar');
-		var createNewP = function( evt){
+		var createNewP = function( d){
 			var p = document.createElement('p');
+			p.style.display = 'block';
 			p.style.wordWrap = 'break-word';
 			p.style.maxWidth = '80%';
-			p.innerText = ''+ evt.data;
+		//	p.innerText = ''+ d[1];
+			p.innerText = ''+ d
 			messageboard.appendChild(p);
 		};
 
-		//start..
-		var username;
-		while( username == undefined || "" || null ){
-			username = window.prompt('nickname?');
-		};
+		var createImg =function(d){
+			
+			var reader =new FileReader()
+			reader.onload= function(e){
+				var uri= e.target.result;
+				var img = document.createElement('img');
+				img.src = uri ;
+				img.style.width='200px';
+				var p=document.createElement('p');
+				p.appendChild(img);
+				messageboard.appendChild(p);
+			};
+			reader.readAsDataURL(d);
+		}
 
+		var createInfor=function(d){ document.getElementById('online').innerText=''+d;
+		}
+
+		function createNew(data){
+			try{
+			var parser=JSON.parse(data);
+
+			if(parser.pic){
+				createImg(parser.pic)
+			};
+			if(parser.content){
+				createNewP(parser.content)
+			};
+			if(parser.infor){
+				createInfor(parser.infor)
+			}
+
+			document.getElementById('messageboard').lastChild.scrollIntoView();			
+		}catch(e){
+			console.log('data format wrong!')
+		}
+		}
+
+		//start..
+		
 		//connecting..
 		statusbar.innerHTML ='<span">正在连接服务器..</span>'
 
 		var ws = new WebSocket( location.origin.replace(/^http/,'ws') );
 		ws.onopen = function(){
 			statusbar.innerHTML ='<span style="color:blue;">连接服务器成功 !</span>'
-			ws.send( username +'上线了' );
 
 		};
 		ws.onmessage = function(evt){
-			createNewP( evt );
+			//console.log(evt.data) 
+
+			//var data= evt.data.split('*')
+
+			if(typeof evt.data=='object' ){
+				createImg(evt.data)
+			}else{
+			createNew(evt.data)
+			};
+
 			statusbar.innerHTML ='<span style="color:blue;">收到新消息</span>'
 		};
 		ws.onclose = function(evt){
@@ -77,12 +126,39 @@
 		function submitmessage (){
 			statusbar.innerHTML ='<span>正在发送消息..</span>';
 
-			var message = document.getElementsByTagName('input')[1].value;
-			document.getElementsByTagName('input')[1].value="";
-			ws.send( username+': '+ message );
+			var dataformat= {
+				'pic':'',
+				'content':'',
+			};
+
+			var message = ''+document.getElementsByTagName('textarea')[0].value;
+			var img= document.getElementById('img').files[0];
+
+			if(img){
+				ws.send(img);
+				document.getElementById('img').outerHTML=document.getElementById('img').outerHTML;
+			};
+
+			if(message){
+				dataformat.content= message;
+
+				var data= JSON.stringify( dataformat );
+
+				ws.send(data);
+
+				document.getElementsByTagName('textarea')[0].value="";
+			};
 
 		
 		};
+
+		// function sendimg(){
+		// 	var 
+		// 	if(img){
+		// 		ws.send( img) ;
+		// 		document.getElementById('img').value=null;
+		// 	}
+		// }
 
 		//statubar clear read message 
 	/*if(event.keycode==13){ submitmessage();
@@ -90,7 +166,11 @@
 		event.preventDefault?e.preventDefault():(event.returnValue = false ) 
 		}
 	*/
-		document.getElementsByTagName('input')[1].onfocus = function(){ statusbar.innerHTML ='' }
+	function clearImg(){
+		document.getElementById('img').outerHTML=document.getElementById('img').outerHTML;
+	};
+		document.getElementsByTagName('input')[1].onfocus = function(){ statusbar.innerHTML ='' };
+	
 
 	</script>
 </body>
