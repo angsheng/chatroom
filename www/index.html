@@ -3,6 +3,9 @@
 <head>
 	<title>test</title>
 	<meta charset="utf-8">
+	<script>
+		( function(){ var m =document.createElement('meta'); m.setAttribute('name','viewport'); m.setAttribute('content','width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no'); document.getElementsByTagName("head")[0].appendChild(m) } )();
+	</script>
 </head>
 <body style="background-color:pink; ">
 	<div>
@@ -21,7 +24,7 @@
 
 	<style>
 		* {padding: 0;}
-		body>div:first-child { min-width:460px; max-width: 500px; margin: 0 auto; padding:15px 0; background-color:#008080;
+		body>div:first-child { max-width: 500px; margin: 0 auto; padding:15px 0; background-color:#008080;
 		border-radius: 5px; }
 
 		#messageboard { border:1px solid #C0C0C0; max-width:483px ; height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; 
@@ -61,7 +64,7 @@
 				var uri= e.target.result;
 				var img = document.createElement('img');
 				img.src = uri ;
-				img.style.width='200px';
+				img.style.maxwidth='200px';
 				var p=document.createElement('p');
 				p.appendChild(img);
 				messageboard.appendChild(p);

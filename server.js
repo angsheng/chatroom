@@ -24,7 +24,7 @@ ws.on('connection',function(w){
 	});
 
 	w.on('message',function(data){
-		console.log('message...'+data);
+//		console.log('message...'+data);
 
 //	var msg= online+'*'+data
 
