@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>test</title>
+	<title>Chat☆☆☆</title>
 	<meta charset="utf-8">
+	<meta name="author" content="Ang">
+	<meta name="description" content="one simply chatroom application,form https://webang.herokuapp.com">
 	<script>
 		( function(){ var m =document.createElement('meta'); m.setAttribute('name','viewport'); m.setAttribute('content','width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no'); document.getElementsByTagName("head")[0].appendChild(m) } )();
 	</script>
@@ -12,7 +14,7 @@
 		<p id="online"></p>
 		<div id='messageboard' ></div>
 		<div id=board>
-			<div id='toolbar'> <input type="file" name='img' id="img"><button onclick="clearImg()">Clear</button></div>
+			<div id='toolbar'> <input type="file" name='img' id="img" placeholder="choice picture"> <button onclick="clearImg()" class="clearButton"> clear </button></div>
 			<div id='p'>
 				<textarea></textarea>
 				<input type="button" onclick="submitmessage()" value="Send">
@@ -24,8 +26,21 @@
 
 	<style>
 		* {padding: 0;}
+		p { margin: 0;padding: 0;margin-bottom: 0.5rem; }
+		p >img { max-width: 25rem; }
+		button {	border:none;		}
+		body {
+			background-image: url(https://onehdwallpaper.com/wp-content/uploads/2015/06/Sad-Rainy-Day-Desktop-Wallpapers.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		}
 		body>div:first-child { max-width: 500px; margin: 0 auto; padding:15px 0; background-color:#008080;
-		border-radius: 5px; }
+			opacity:0.9;
+		border-radius: 5px;
+		font-size: 0.8rem;
+		}
+
+		.clearButton {padding: 3px;}
 		
 		#messageboard { border:1px solid #C0C0C0; max-width:483px ; height: 380px; margin: 0 15px;  background-color: white; padding: 6px; overflow-y:  scroll; 
 		}
@@ -41,6 +56,7 @@
 		#statusbar { font-size: 0.5em; height: 0.6em; margin: 0; margin-left: 15px; }
 
 		#online { color: white; margin:0; margin-left: 1rem;}
+
 		
 	</style>
 
@@ -54,6 +70,7 @@
 			p.style.display = 'block';
 			p.style.wordWrap = 'break-word';
 			p.style.maxWidth = '80%';
+			p.style.overflow = "hidden";
 		//	p.innerText = ''+ d[1];
 			p.innerText = ''+ d
 			messageboard.appendChild(p);
@@ -100,11 +117,11 @@
 		//start..
 		
 		//connecting..
-		statusbar.innerHTML ='<span">正在连接服务器..</span>'
+		statusbar.innerHTML ='<span">connect to server..</span>'
 
 		var ws = new WebSocket( location.origin.replace(/^http/,'ws') );
 		ws.onopen = function(){
-			statusbar.innerHTML ='<span style="color:blue;">连接服务器成功 !</span>'
+			statusbar.innerHTML ='<span style="color:blue;">connect succeed !</span>'
 
 		};
 		ws.onmessage = function(evt){
@@ -118,18 +135,18 @@
 			createNew(evt.data)
 			};
 
-			statusbar.innerHTML ='<span style="color:blue;">收到新消息</span>'
+			statusbar.innerHTML ='<span style="color:blue;">new message</span>'
 		};
 		ws.onclose = function(evt){
-			statusbar.innerHTML ='<span style="color:red;">与服务器断开了连接! 请刷新页面</span>'
+			statusbar.innerHTML ='<span style="color:red;">lose connect,please reload !</span>'
 		};
 		ws.onerror = function(){
-			statusbar.innerHTML ='<span style="color:red;">连接失败 !</span>'
+			statusbar.innerHTML ='<span style="color:red;">connect to server failed</span>'
 		}
 
 		//on submit sendmessage
 		function submitmessage (){
-			statusbar.innerHTML ='<span>正在发送消息..</span>';
+			statusbar.innerHTML ='<span>sending message..</span>';
 
 			var dataformat= {
 				'pic':'',
