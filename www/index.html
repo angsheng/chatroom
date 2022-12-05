@@ -9,7 +9,7 @@
 		( function(){ var m =document.createElement('meta'); m.setAttribute('name','viewport'); m.setAttribute('content','width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no'); document.getElementsByTagName("head")[0].appendChild(m) } )();
 	</script>
 </head>
-<body style="background-color:pink; ">
+<body style="background-color:#655d2e;">
 	<div>
 		<p id="online"></p>
 		<div id='messageboard' ></div>
@@ -73,7 +73,8 @@
 
 	<script >
 		//initial..
-
+		var guid_id = Math.random().toString(36).slice(-5);
+		var t_ = new Date();
 		var messageboard = document.getElementById("messageboard");
 		var statusbar = document.getElementById('statusbar');
 		var createNewP = function( d){
@@ -83,13 +84,13 @@
 			p.style.maxWidth = '80%';
 			p.style.overflow = "hidden";
 		//	p.innerText = ''+ d[1];
-			p.innerText = ''+ d
+			p.innerText = ''+ d;
 			messageboard.appendChild(p);
 		};
 
 		var createImg =function(d){
 			
-			var reader =new FileReader()
+			var reader =new FileReader();
 			reader.onload= function(e){
 				var uri= e.target.result;
 				var img = document.createElement('img');
@@ -128,12 +129,20 @@
 		//start..
 		
 		//connecting..
-		statusbar.innerHTML ='<span">connect to server..</span>'
+		statusbar.innerHTML ='<span">connect to server..</span>';
+		var timerID = 0;	
 
 		var ws = new WebSocket( location.origin.replace(/^http/,'ws') );
 		ws.onopen = function(){
-			statusbar.innerHTML ='<span style="color:blue;">connect succeed !</span>'
+			statusbar.innerHTML ='<span style="color:blue;">connect succeed !</span>';
 
+			function keepAlive() {
+		    	var timeout = 15000;
+		    	if (webSocket.readyState == webSocket.OPEN) {
+		        	webSocket.send('')
+		    	};
+		    	timerId = setTimeout(keepAlive, timeout)
+			}
 		};
 		ws.onmessage = function(evt){
 			//console.log(evt.data) 
@@ -149,7 +158,13 @@
 			statusbar.innerHTML ='<span style="color:blue;">new message</span>'
 		};
 		ws.onclose = function(evt){
-			statusbar.innerHTML ='<span style="color:red;">lose connect,please reload !</span>'
+			statusbar.innerHTML ='<span style="color:red;">lose connect,please reload !</span>';
+
+			function cancelKeepAlive() {
+		    	if (timerId) {
+		        	cancelTimeout(timerId)
+		    	}
+			}
 		};
 		ws.onerror = function(){
 			statusbar.innerHTML ='<span style="color:red;">connect to server failed</span>'
@@ -163,8 +178,9 @@
 				'pic':'',
 				'content':'',
 			};
+			var t_now = t_.toLocaleString();
 
-			var message = ''+document.getElementsByTagName('textarea')[0].value;
+			var message = guid_id+' '+t_now+': '+document.getElementsByTagName('textarea')[0].value;
 			var img= document.getElementById('img').files[0];
 
 			if(img){
@@ -204,6 +220,7 @@
 	};
 		document.getElementsByTagName('input')[1].onfocus = function(){ statusbar.innerHTML ='' };
 	
+
 
 	</script>
 </body>
