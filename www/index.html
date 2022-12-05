@@ -14,10 +14,10 @@
 		<p id="online"></p>
 		<div id='messageboard' ></div>
 		<div id=board>
-			<div id='toolbar'> <input type="file" name='img' id="img" placeholder="choice picture"> <button onclick="clearImg()" class="clearButton"> clear </button></div>
+			<div id='toolbar'> <input type="file" name='img' id="img" placeholder="choice picture" style="background-color:gray;"> <button onclick="clearImg()" class="clearButton submit" > clear </button></div>
 			<div id='p'>
 				<textarea></textarea>
-				<input type="button" onclick="submitmessage()" value="Send">
+				<input type="button" onclick="submitmessage()" value="Send" class="submit">
 
 			</div>
 			<p id="statusbar"></p>
@@ -38,6 +38,17 @@
 			opacity:0.9;
 		border-radius: 5px;
 		font-size: 0.8rem;
+		}
+		
+		.submit {
+		   	 color: #fff;
+  		background-color: #28a745;
+  		border-color: #28a745;
+		}
+		.submit:hover {
+		 color: #fff;
+ 		 background-color: #218838;
+  		border-color: #1e7e34;
 		}
 
 		.clearButton {padding: 3px;}
